@@ -3,10 +3,12 @@ import 'dart:async';
 import 'state.dart';
 
 final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
-  late S current;
+  late S _current;
 
   final StreamController<E> eventsController;
   final StreamController<S> updatesController;
+
+  S get current => _current;
 
   Stream<E> get events => eventsController.stream;
   Stream<S> get updates => updatesController.stream;
@@ -28,7 +30,7 @@ final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
   }
 
   void start(S initial) {
-    current = initial;
+    _current = initial;
 
     if (current is Enter) {
       (current as Enter).enter();
@@ -53,7 +55,7 @@ final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
       (current as Exit).exit();
     }
 
-    updatesController.add(current = next);
+    updatesController.add(_current = next);
 
     if (current is Enter) {
       (current as Enter).enter();
