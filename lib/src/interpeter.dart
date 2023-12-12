@@ -5,28 +5,26 @@ import 'state.dart';
 final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
   late S current;
 
-  final StreamController<S> controller;
+  final StreamController<E> eventsController;
+  final StreamController<S> updatesController;
 
-  Stream<S> get updates => controller.stream;
+  Stream<E> get events => eventsController.stream;
+  Stream<S> get updates => updatesController.stream;
 
-  Interpeter({required this.controller});
+  Interpeter({required this.eventsController, required this.updatesController});
 
   factory Interpeter.synchronous() {
-    final controller = StreamController<S>(sync: true);
+    final eventsController = StreamController<E>(sync: true);
+    final updatesController = StreamController<S>(sync: true);
 
-    return Interpeter(controller: controller);
+    return Interpeter(eventsController: eventsController, updatesController: updatesController);
   }
 
   factory Interpeter.controller() {
-    final controller = StreamController<S>();
+    final eventsController = StreamController<E>();
+    final updatesController = StreamController<S>();
 
-    return Interpeter(controller: controller);
-  }
-
-  factory Interpeter.broadcast() {
-    final controller = StreamController<S>.broadcast();
-
-    return Interpeter(controller: controller);
+    return Interpeter(eventsController: eventsController, updatesController: updatesController);
   }
 
   void start(S initial) {
@@ -42,17 +40,20 @@ final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
       (current as Exit).exit();
     }
 
-    controller.close();
+    eventsController.close();
+    updatesController.close();
   }
 
   void send(E event) {
+    eventsController.add(event);
+
     final next = current.transition(this, event);
 
     if (current is Exit) {
       (current as Exit).exit();
     }
 
-    controller.add(current = next);
+    updatesController.add(current = next);
 
     if (current is Enter) {
       (current as Enter).enter();

@@ -2,20 +2,10 @@ import 'package:villefort_fsm/villefort_fsm.dart';
 
 typedef LightInterpeter = Interpeter<LightState, LightEvent>;
 
-sealed class LightEvent {
-  const LightEvent();
-}
-
-final class RedEvent extends LightEvent {
-  const RedEvent();
-}
-
-final class YellowEvent extends LightEvent {
-  const YellowEvent();
-}
-
-final class GreenEvent extends LightEvent {
-  const GreenEvent();
+enum LightEvent {
+  red,
+  yellow,
+  green,
 }
 
 sealed class LightState implements Transitionable<LightState, LightEvent> {
@@ -28,7 +18,7 @@ final class RedState extends LightState {
   @override
   LightState transition(LightInterpeter interpeter, LightEvent event) {
     return switch (event) {
-      GreenEvent() => GreenState(),
+      LightEvent.green => GreenState(),
       _ => throw InvalidTransitionException(),
     };
   }
@@ -40,7 +30,7 @@ final class YellowState extends LightState {
   @override
   LightState transition(LightInterpeter interpeter, LightEvent event) {
     return switch (event) {
-      RedEvent() => RedState(),
+      LightEvent.red => RedState(),
       _ => throw InvalidTransitionException(),
     };
   }
@@ -52,7 +42,7 @@ final class GreenState extends LightState {
   @override
   LightState transition(LightInterpeter interpeter, LightEvent event) {
     return switch (event) {
-      YellowEvent() => YellowState(),
+      LightEvent.yellow => YellowState(),
       _ => throw InvalidTransitionException(),
     };
   }

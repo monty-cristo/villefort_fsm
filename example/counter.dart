@@ -24,7 +24,7 @@ final class CounterState implements Transitionable<CounterState, CounterEvent> {
   const CounterState({required this.amount});
 
   @override
-  CounterState transition(Interpeter<CounterState, CounterEvent> interpeter, CounterEvent event) {
+  CounterState transition(CounterInterpeter interpeter, CounterEvent event) {
     return switch (event) {
       IncrementEvent(amount: final amount) => CounterState(amount: this.amount + amount),
       DecrementEvent(amount: final amount) => CounterState(amount: this.amount - amount),
