@@ -8,23 +8,10 @@ final class NextEvent {
   const NextEvent();
 }
 
-sealed class LightState implements Transitionable<LightState, NextEvent> {
-  const LightState();
-}
-
-final class RedState extends LightState implements Exit {
+sealed class LightState implements Transitionable<LightState, NextEvent>, Exit {
   final Timer timer;
 
-  const RedState({required this.timer});
-
-  factory RedState.timer({required LightInterpeter interpeter}) {
-    return RedState(timer: Timer(const Duration(seconds: 5), () => interpeter.send(NextEvent())));
-  }
-
-  @override
-  LightState transition(LightInterpeter interpeter, NextEvent event) {
-    return GreenState.timer(interpeter: interpeter);
-  }
+  LightState({required LightInterpeter interpeter, required int seconds}) : timer = Timer(Duration(seconds: seconds), () => interpeter.send(NextEvent()));
 
   @override
   void exit() {
@@ -32,43 +19,30 @@ final class RedState extends LightState implements Exit {
   }
 }
 
-final class YellowState extends LightState implements Exit {
-  final Timer timer;
-
-  const YellowState({required this.timer});
-
-  factory YellowState.timer({required LightInterpeter interpeter}) {
-    return YellowState(timer: Timer(const Duration(seconds: 1), () => interpeter.send(NextEvent())));
-  }
+final class RedState extends LightState {
+  RedState({required super.interpeter}) : super(seconds: 5);
 
   @override
   LightState transition(LightInterpeter interpeter, NextEvent event) {
-    return RedState.timer(interpeter: interpeter);
-  }
-
-  @override
-  void exit() {
-    timer.cancel();
+    return GreenState(interpeter: interpeter);
   }
 }
 
-final class GreenState extends LightState implements Exit {
-  final Timer timer;
-
-  const GreenState({required this.timer});
-
-  factory GreenState.timer({required LightInterpeter interpeter}) {
-    return GreenState(timer: Timer(const Duration(seconds: 2), () => interpeter.send(NextEvent())));
-  }
+final class YellowState extends LightState {
+  YellowState({required super.interpeter}) : super(seconds: 2);
 
   @override
   LightState transition(LightInterpeter interpeter, NextEvent event) {
-    return YellowState.timer(interpeter: interpeter);
+    return RedState(interpeter: interpeter);
   }
+}
+
+final class GreenState extends LightState {
+  GreenState({required super.interpeter}) : super(seconds: 3);
 
   @override
-  void exit() {
-    timer.cancel();
+  LightState transition(LightInterpeter interpeter, NextEvent event) {
+    return YellowState(interpeter: interpeter);
   }
 }
 
@@ -77,5 +51,5 @@ void main() {
 
   interpeter.updates.listen(print);
 
-  interpeter.start(GreenState.timer(interpeter: interpeter));
+  interpeter.start(GreenState(interpeter: interpeter));
 }
