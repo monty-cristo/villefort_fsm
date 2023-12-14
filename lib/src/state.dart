@@ -12,4 +12,4 @@ abstract interface class Transitionable<S extends Transitionable<S, E>, E extend
   S transition(Interpeter<S, E> interpeter, E event);
 }
 
-final class InvalidTransitionException implements Exception {}
+final class InvalidTransitionError implements Exception {}

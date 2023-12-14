@@ -4,38 +4,33 @@ import 'package:villefort_fsm/villefort_fsm.dart';
 import '../../example/manual_traffic_light.dart';
 
 void main() {
-  group('Manual traffic light manual', () {
-    late LightInterpeter interpeter;
+  late LightInterpeter interpeter;
 
-    setUp(() {
-      interpeter = LightInterpeter.synchronous();
-    });
+  setUp(() {
+    interpeter = LightInterpeter.controller();
+  });
 
-    test('Transitions', () {
-      interpeter.start(const RedState());
+  test('Valid transitions', () {
+    interpeter.start(const RedState());
 
-      expect(interpeter.current, isA<RedState>());
+    interpeter.send(LightEvent.green);
+    interpeter.send(LightEvent.yellow);
+    interpeter.send(LightEvent.red);
 
-      interpeter.send(const GreenEvent());
+    expect(
+      interpeter.updates,
+      emitsInOrder([
+        isA<GreenState>(),
+        isA<YellowState>(),
+        isA<RedState>(),
+      ]),
+    );
+  });
 
-      print(interpeter.current);
+  test('Invalid transitions', () {
+    interpeter.start(const RedState());
 
-      expect(interpeter.current, isA<GreenState>());
-
-      interpeter.send(const YellowEvent());
-
-      expect(interpeter.current, isA<YellowState>());
-
-      interpeter.send(const RedEvent());
-
-      expect(interpeter.current, isA<RedState>());
-    });
-
-    test('Invalid transitions', () {
-      interpeter.start(const RedState());
-
-      expect(() => interpeter.send(const YellowEvent()), throwsA(isA<InvalidTransitionException>()));
-      expect(() => interpeter.send(const RedEvent()), throwsA(isA<InvalidTransitionException>()));
-    });
+    expect(() => interpeter.send(LightEvent.yellow), throwsA(isA<InvalidTransitionError>()));
+    expect(() => interpeter.send(LightEvent.red), throwsA(isA<InvalidTransitionError>()));
   });
 }

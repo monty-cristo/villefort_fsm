@@ -31,19 +31,3 @@ final class CounterState implements Transitionable<CounterState, CounterEvent> {
     };
   }
 }
-
-void main() {
-  final interpeter = CounterInterpeter.synchronous();
-
-  final subscription = interpeter.updates.listen((state) => print(state.amount));
-
-  interpeter.start(CounterState(amount: 0));
-
-  interpeter.send(IncrementEvent(amount: 10));
-  interpeter.send(DecrementEvent(amount: 15));
-  interpeter.send(IncrementEvent(amount: 33));
-
-  subscription.cancel();
-
-  interpeter.stop();
-}

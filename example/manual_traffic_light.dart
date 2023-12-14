@@ -19,7 +19,7 @@ final class RedState extends LightState {
   LightState transition(LightInterpeter interpeter, LightEvent event) {
     return switch (event) {
       LightEvent.green => GreenState(),
-      _ => throw InvalidTransitionException(),
+      _ => throw InvalidTransitionError(),
     };
   }
 }
@@ -31,7 +31,7 @@ final class YellowState extends LightState {
   LightState transition(LightInterpeter interpeter, LightEvent event) {
     return switch (event) {
       LightEvent.red => RedState(),
-      _ => throw InvalidTransitionException(),
+      _ => throw InvalidTransitionError(),
     };
   }
 }
@@ -43,7 +43,7 @@ final class GreenState extends LightState {
   LightState transition(LightInterpeter interpeter, LightEvent event) {
     return switch (event) {
       LightEvent.yellow => YellowState(),
-      _ => throw InvalidTransitionException(),
+      _ => throw InvalidTransitionError(),
     };
   }
 }

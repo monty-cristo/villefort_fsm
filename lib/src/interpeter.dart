@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'state.dart';
 
+typedef InterpeterProvider<S extends Transitionable<S, E>, E extends Object> = Interpeter<S, E> Function();
+
 final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
   late S _current;
 
@@ -14,13 +16,6 @@ final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
   Stream<S> get updates => updatesController.stream;
 
   Interpeter({required this.eventsController, required this.updatesController});
-
-  factory Interpeter.synchronous() {
-    final eventsController = StreamController<E>(sync: true);
-    final updatesController = StreamController<S>(sync: true);
-
-    return Interpeter(eventsController: eventsController, updatesController: updatesController);
-  }
 
   factory Interpeter.controller() {
     final eventsController = StreamController<E>();

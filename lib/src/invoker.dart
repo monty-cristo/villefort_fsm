@@ -85,7 +85,7 @@ final class Invoker<T> implements Enter, Exit {
     required void Function(T value) success,
     required void Function(Object error, StackTrace stackTrace) error,
   }) {
-    final interpeter = AsyncInterpeter<T>.synchronous();
+    final interpeter = AsyncInterpeter<T>.controller();
 
     final subscription = interpeter.updates.listen((state) {
       print(state);
