@@ -5,6 +5,5 @@ library;
 
 export 'src/interpeter.dart';
 export 'src/state.dart';
-export 'src/invoker.dart';
 
 // TODO: Export any libraries intended for clients of this package.
