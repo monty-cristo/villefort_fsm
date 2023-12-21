@@ -14,7 +14,7 @@ final class WalkState extends PedestrianState {
   const WalkState();
 
   @override
-  PedestrianState transition(PedestrianInterpeter interpeter, CountDown event) {
+  PedestrianState transition(CountDown event) {
     return switch (event) {
       CountDown() => const WaitState(),
     };
@@ -25,7 +25,7 @@ final class WaitState extends PedestrianState {
   const WaitState();
 
   @override
-  PedestrianState transition(PedestrianInterpeter interpeter, CountDown event) {
+  PedestrianState transition(CountDown event) {
     return switch (event) {
       CountDown() => const StopState(),
     };
@@ -36,7 +36,7 @@ final class StopState extends PedestrianState {
   const StopState();
 
   @override
-  PedestrianState transition(PedestrianInterpeter interpeter, CountDown event) {
+  PedestrianState transition(CountDown event) {
     throw InvalidTransitionError();
   }
 }
@@ -45,7 +45,7 @@ final class BlinkingState extends PedestrianState {
   const BlinkingState();
 
   @override
-  PedestrianState transition(PedestrianInterpeter interpeter, CountDown event) {
+  PedestrianState transition(CountDown event) {
     throw InvalidTransitionError();
   }
 }

@@ -1,5 +1,3 @@
-import 'interpeter.dart';
-
 abstract interface class Enter {
   void enter();
 }
@@ -9,7 +7,7 @@ abstract interface class Exit {
 }
 
 abstract interface class Transitionable<S extends Transitionable<S, E>, E extends Object> {
-  S transition(Interpeter<S, E> interpeter, E event);
+  S transition(E event);
 }
 
 final class InvalidTransitionError implements Exception {}

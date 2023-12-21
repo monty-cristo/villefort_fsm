@@ -30,7 +30,7 @@ final class RedState extends LightState implements Enter, Exit {
   }
 
   @override
-  LightState transition(LightInterpeter interpeter, LightEvent event) {
+  LightState transition(LightEvent event) {
     return switch (event) {
       LightEvent.timer => const GreenState(),
       LightEvent.outage => RedState(initial: const BlinkingState(), pedestrian: pedestrian),
@@ -53,7 +53,7 @@ final class YellowState extends LightState {
   const YellowState();
 
   @override
-  LightState transition(LightInterpeter interpeter, LightEvent event) {
+  LightState transition(LightEvent event) {
     return switch (event) {
       LightEvent.timer => RedState.walk(),
       LightEvent.outage => RedState.blinking(),
@@ -66,7 +66,7 @@ final class GreenState extends LightState {
   const GreenState();
 
   @override
-  LightState transition(LightInterpeter interpeter, LightEvent event) {
+  LightState transition(LightEvent event) {
     return switch (event) {
       LightEvent.timer => const YellowState(),
       LightEvent.outage => RedState.blinking(),

@@ -9,9 +9,11 @@ final class NextEvent {
 }
 
 sealed class LightState implements Transitionable<LightState, NextEvent>, Exit {
+  final LightInterpeter interpeter;
+
   final Timer timer;
 
-  LightState({required LightInterpeter interpeter, required int seconds}) : timer = Timer(Duration(seconds: seconds), () => interpeter.send(NextEvent()));
+  LightState({required this.interpeter, required int seconds}) : timer = Timer(Duration(seconds: seconds), () => interpeter.send(NextEvent()));
 
   @override
   void exit() {
@@ -23,7 +25,7 @@ final class RedState extends LightState {
   RedState({required super.interpeter}) : super(seconds: 5);
 
   @override
-  LightState transition(LightInterpeter interpeter, NextEvent event) {
+  LightState transition(NextEvent event) {
     return GreenState(interpeter: interpeter);
   }
 }
@@ -32,7 +34,7 @@ final class YellowState extends LightState {
   YellowState({required super.interpeter}) : super(seconds: 2);
 
   @override
-  LightState transition(LightInterpeter interpeter, NextEvent event) {
+  LightState transition(NextEvent event) {
     return RedState(interpeter: interpeter);
   }
 }
@@ -41,7 +43,7 @@ final class GreenState extends LightState {
   GreenState({required super.interpeter}) : super(seconds: 3);
 
   @override
-  LightState transition(LightInterpeter interpeter, NextEvent event) {
+  LightState transition(NextEvent event) {
     return YellowState(interpeter: interpeter);
   }
 }

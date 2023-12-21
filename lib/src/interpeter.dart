@@ -44,7 +44,7 @@ final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
   void send(E event) {
     eventsController.add(event);
 
-    final next = current.transition(this, event);
+    final next = current.transition(event);
 
     if (current is Exit) {
       (current as Exit).exit();
