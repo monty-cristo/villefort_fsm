@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'state.dart';
 
-typedef InterpeterProvider<S extends Transitionable<S, E>, E extends Object> = Interpeter<S, E> Function();
-
 final class Interpeter<S extends Transitionable<S, E>, E extends Object> {
   late S _current;
 
